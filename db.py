@@ -7,7 +7,9 @@ class Database:
         self.cur.execute("CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, gcode_file_path text)")
         self.conn.commit()
 
-    def fetch(self):
+        #Need to create a model for the burning profile. (Filename linked to speed and power)
+
+    def defaultGcodePathFetch(self):
         self.cur.execute("SELECT * FROM settings")
         rows = self.cur.fetchone()
         return rows
