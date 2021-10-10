@@ -10,7 +10,7 @@ class Database:
 
         #Need to create a model for the burning profile. (Filename linked to speed and power)
 
-    def defaultGcodePathFetch(self):
+    def getSettings(self):
         self.cur.execute("SELECT * FROM settings")
         defaultPath = self.cur.fetchone()
         return defaultPath
