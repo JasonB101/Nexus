@@ -4,24 +4,34 @@ class Database:
     def __init__(self, db):
         self.conn = sqlite3.connect(db)
         self.cur = self.conn.cursor()
-        self.cur.execute("CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, gcode_file_path text)")
-        self.cur.execute("CREATE TABLE IF NOT EXISTS profiles (id INTEGER PRIMARY KEY, filename text, power int, speed int)")
+        self.cur.execute("CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, defaultProfile text)")
+        self.cur.execute("CREATE TABLE IF NOT EXISTS profiles (profilename text PRIMARY KEY, filepath text, power int, speed int)")
         self.conn.commit()
 
         #Need to create a model for the burning profile. (Filename linked to speed and power)
 
+    
+    def fetchProfile(self, profilename):
+        self.cur.execute("SELECT * FROM profiles WHERE profilename= ?", (profilename,))
+        profile = self.cur.fetchone()
+        return profile
+    
+    def saveProfile(self, profile):
+        profilename = profile.get('profilename', None)
+        filepath = profile.get('filepath', None)
+        power = profile.get('power', None)
+        speed = profile.get('speed', None)
+        self.cur.execute("INSERT or REPLACE INTO profiles(profilename, filepath, power, speed) VALUES(?,?,?,?)", (profilename, filepath, power, speed))
+        self.conn.commit()
+        print("saved",profilename,filepath,power,speed)
+    
     def getSettings(self):
         self.cur.execute("SELECT * FROM settings")
         defaultPath = self.cur.fetchone()
         return defaultPath
-    
-    def fetchProfile(self, filename):
-        self.cur.execute("SELECT * FROM profiles WHERE filename= ?", (filename,))
-        profile = self.cur.fetchone()
-        return profile
         
-    def insertSettings(self, path):
-        self.cur.execute("INSERT INTO settings VALUES (77, ?)", (path,))
+    def insertSettings(self, defaultProfile):
+        self.cur.execute("INSERT or REPLACE INTO settings(id, defaultProfile) VALUES (77, ?)", (defaultProfile,))
         self.conn.commit()
 
     def removeSettings(self, id):
@@ -29,7 +39,7 @@ class Database:
         self.conn.commit()
 
     def updateSettings(self, id, path):
-        self.cur.execute("UPDATE settings SET gcode_file_path = ? WHERE id = ?", (path, id))
+        self.cur.execute("UPDATE settings SET defaultProfile = ? WHERE id = ?", (path, id))
         self.conn.commit()
 
     def __del__(self):

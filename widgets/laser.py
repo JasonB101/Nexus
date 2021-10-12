@@ -10,15 +10,17 @@ db = Database('store.db')
 class LaserConfig:
     def __init__(self, app, laserNum, ports, defaultProfileName):
         def openNewPath():
-            self.filePath = filedialog.askopenfilename()
-            filename = os.path.basename(self.filePath)
+            self.filepath = filedialog.askopenfilename()
+            filename = os.path.basename(self.filepath)
+            self.profilename = filename
             profile = db.fetchProfile(filename)
             loadProfile(profile)
             self.labelPath.configure(text=filename)
         
             if (laserNum == 1):
-                db.updateSettings(77, os.path.basename(self.filePath)) #change default GCode path, 77 is a random ID I chose 
+                db.insertSettings(filename) #change default GCode path, 77 is a random ID I chose 
         
+        self.filepath = ""
         self.powerVar = tk.StringVar()
         self.speedVar = tk.StringVar()
         self.portVar = tk.StringVar()
@@ -26,11 +28,11 @@ class LaserConfig:
         self.power = lambda: self.powerVar.get()
         self.speed = lambda: self.speedVar.get()
         self.port = lambda: self.portVar.get()
-        self.filename = defaultProfileName
+        self.profilename = defaultProfileName
         self.laserNum = laserNum
         #View
         self.frame = tk.Frame(app, width=150, height = 150, highlightthickness=1, highlightbackground='black')
-        self.labelPath = tk.Label(self.frame, text=self.filename)
+        self.labelPath = tk.Label(self.frame, text=self.profilename)
         self.button = tk.Button(self.frame, text="Open", command = openNewPath)
         self.labelPower = tk.Label(self.frame, text="power:")
         self.labelSpeed = tk.Label(self.frame, text="speed:")
@@ -69,10 +71,13 @@ class LaserConfig:
             
             
         def loadProfile(profile):
+            #(profilename, filepath, power, speed)
+            #profile is returned as a tuple
+            print(profile)
             if (profile):
-                self.powerVar.set(profile.power)
-                self.speedVar.set(profile.speed)
-                self.filename = profile.filename
+                self.powerVar.set(profile[2])
+                self.speedVar.set(profile[3])
+                self.filepath = profile[1]
             else:
                 self.powerVar.set(75)
                 self.speedVar.set(20)
