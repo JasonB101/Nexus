@@ -2,33 +2,37 @@ import os
 import tkinter as tk
 from tkinter import CENTER
 from db import Database
+from classes.Job import Job
 db = Database('store.db')
 
 class BurnControl:
-    def __init__(self, app, lasers):
+    def __init__(self, app, lasers, runJobs):
         def printDetails():
             for laser in lasers:
-                config = laser.get('config', None)
-                print(config.profilename, config.port(), config.speed(), config.power())
+                print(laser.profilename, laser.port(), laser.speed(), laser.power())
                 
         def saveProfiles():
             for laser in lasers:
                 profile = buildProfile(laser)
                 db.saveProfile(profile)
         
-        def buildProfile(object):
-            config = object.get('config', None)
+        def buildProfile(laserConfig):
             profile = {
-                "profilename": config.profilename,
-                "filepath": config.filepath,
-                "power": config.power(),
-                "speed": config.speed(),
+                "profilename": laserConfig.profilename,
+                "filepath": laserConfig.filepath,
+                "power": laserConfig.power(),
+                "speed": laserConfig.speed(),
             }
             return profile
         
-        def startJobs():
-            printDetails()
-            saveProfiles()
+        def startJobs():         
+            runJobs()
+                
+            # for job in jobs:
+            #     job.getResponse()
+                
+            # printDetails()
+            # saveProfiles()
             
         self.button = tk.Button(app, text="Start", command = startJobs)
         self.button.grid(row=2, column=0)

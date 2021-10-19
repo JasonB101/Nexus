@@ -5,5 +5,4 @@ def getComPorts():
     portsList = []
     for i in ports:
         portsList.append(i.device)
-        portsList.append(i.device)
     return portsList

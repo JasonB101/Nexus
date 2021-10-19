@@ -73,7 +73,6 @@ class LaserConfig:
         def loadProfile(profile):
             #(profilename, filepath, power, speed)
             #profile is returned as a tuple
-            print(profile)
             if (profile):
                 self.powerVar.set(profile[2])
                 self.speedVar.set(profile[3])
