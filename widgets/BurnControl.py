@@ -26,7 +26,7 @@ class BurnControl:
             return profile
         
         def startJobs():         
-            runJobs()
+            runJobs(lasers)
                 
             # for job in jobs:
             #     job.getResponse()
