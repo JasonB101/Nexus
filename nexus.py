@@ -5,7 +5,7 @@ from widgets.Laser import LaserConfig
 from widgets.BurnControl import BurnControl
 from functions.getComPorts import getComPorts
 from classes.Job import Job
-from functions.getResponse import getResponse
+from functions.runJob import runJob
 import multiprocessing as mp
 
 
@@ -21,12 +21,9 @@ lasers = []
 app.title('Nexus')
 app.geometry('720x350')
 
-
 for i in range(numberOfLasers):
     lasers.append(LaserConfig(app, i+1, comPorts, defaultProfileName))
     
-def runJob(job):
-    getResponse(job.port)
 
 def runJobs():
     jobs = []
@@ -34,10 +31,10 @@ def runJobs():
         jobs.append(Job(laser))
         
     for job in jobs:
-        mp.freeze_support()
         proc = mp.Process(target=runJob, args=(job,))
         proc.start()
     
 burnControl = BurnControl(app, lasers, runJobs)
 
-app.mainloop()
+if __name__ == '__main__':
+    app.mainloop()
