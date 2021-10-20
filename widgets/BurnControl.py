@@ -2,14 +2,13 @@ import os
 import tkinter as tk
 from tkinter import CENTER
 from db import Database
-from classes.Job import Job
 db = Database('store.db')
 
 class BurnControl:
-    def __init__(self, app, lasers, runJobs):
+    def __init__(self, app, lasers, startJobs, messageBox):
         def printDetails():
             for laser in lasers:
-                print(laser.profilename, laser.port(), laser.speed(), laser.power())
+                messageBox.insertMessage(f'{laser.profilename} {laser.port()} {laser.speed()} {laser.power()}')
                 
         def saveProfiles():
             for laser in lasers:
@@ -25,15 +24,11 @@ class BurnControl:
             }
             return profile
         
-        def startJobs():         
-            runJobs(lasers)
-                
-            # for job in jobs:
-            #     job.getResponse()
-                
-            # printDetails()
+        def start():
+            messageBox.insertMessage(f'Starting Jobs on {len(lasers)} lasers')        
+            startJobs(lasers, messageBox)
             # saveProfiles()
             
-        self.button = tk.Button(app, text="Start", command = startJobs)
-        self.button.grid(row=2, column=0)
-        self.button.place(relx=0.01, rely=0.6)
+        self.button = tk.Button(app, text="Start", command = start)
+        self.button.grid(row=3, column=0)
+        self.button.place(relx=0.01, rely=0.915)

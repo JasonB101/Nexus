@@ -6,6 +6,7 @@ class Job:
         self.atHomePos = False
         self.power = config.power()
         self.speed = config.speed()
+        self.profilename = config.profilename
         self.filepath = config.filepath
         self.port = config.port()
 

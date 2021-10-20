@@ -3,8 +3,10 @@ from tkinter import *
 from db import Database
 from widgets.Laser import LaserConfig
 from widgets.BurnControl import BurnControl
+from widgets.Messages import Messages
 from functions.getComPorts import getComPorts
-from functions.runJobs import runJobs
+from functions.startJobs import startJobs
+
 
 db = Database('store.db')
 app = Tk()
@@ -18,9 +20,12 @@ for i in range(numberOfLasers):
 
 
 app.title('Nexus')
-app.geometry('720x350')
-    
-burnControl = BurnControl(app, lasers, runJobs)
+app.geometry('720x400') 
+
+messageBox = Messages(app)
+        
+burnControl = BurnControl(app, lasers, startJobs, messageBox)
+
 
 if __name__ == '__main__':
     app.mainloop()

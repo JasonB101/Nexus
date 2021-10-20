@@ -13,7 +13,9 @@ def getReport(port):
     while True:
         response = conn.readline()
         if len(response) > 0:
-            print (f'PORT: {port} - {response.rstrip()}')
+            return f'PORT: {port} - {response.rstrip()}'
         else:
             break
+        
+    return f'PORT: {port} - No Response...'
         
